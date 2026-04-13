@@ -19,7 +19,7 @@ export const claudeLimiter = rateLimit({
   message:{
     success: false,
     statusCode:429,
-    message:'AI request limit reached, please try again after 1 hours',
+    message:'AI request limit reached, please try again after 1 hour',
   }
 })
 

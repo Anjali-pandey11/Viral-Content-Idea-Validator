@@ -50,6 +50,32 @@ const validationSchema = new mongoose.Schema(
     hooks: {
       type: [String],
     },
+  tone: {
+  type: String,
+  enum: ['Funny', 'Inspirational', 'Aggressive', 'Storytelling',
+         'Educational', 'Controversial', 'Professional'],
+},
+format: {
+  type: String,
+  enum: ['Hook-Heavy', 'Fast Cuts', 'Storytelling', 'Tutorial',
+         'Listicle', 'Documentary', 'Vlog Style'],
+},
+toneAnalysis: {
+  givenTone: String,
+  toneEffectiveness: String,
+  reason: String,
+  suggestedTone: String,
+},
+formatAnalysis: {
+  givenFormat: String,
+  formatEffectiveness: String,
+  reason: String,
+  suggestedFormat: String,
+},
+hashtagStrategy: {
+  recommendedCount: Number,
+  suggestedHashtags: [String],
+},
   },
   { timestamps: true }
 );
