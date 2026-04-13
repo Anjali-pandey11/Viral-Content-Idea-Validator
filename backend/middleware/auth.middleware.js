@@ -5,11 +5,11 @@ import asyncHandler from '../utils/asyncHandler.js';
 const protect = asyncHandler(async (req, res, next) => {
    let token;
 
-   if(req.header.authorization && req.header.authorization.startsWith('Bearer')){
+   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
      try {
 
        // Bearer TOKEN → sirf TOKEN nikalo
-      token = req.header.authorization.split(' ')[1];
+      token = req.headers.authorization.split(' ')[1];
 
        // Token verify karo
       const decode = jwt.verify(token, process.env.JWT_SECRET)
