@@ -20,6 +20,7 @@ app.use(express.json());
 
 // Routes
 
+
 // Health check
 app.get('/', (req, res) => {
   res.send('Viral Content Validator API is running');
