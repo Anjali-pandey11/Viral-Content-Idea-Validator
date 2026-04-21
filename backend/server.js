@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import authRoutes from './routes/auth.routes.js';
 
 // Middleware
 import errorHandler from './middleware/errorHandler.middleware.js';
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // Routes
 
+app.use('/api/auth', authRoutes);
 
 // Health check
 app.get('/', (req, res) => {
