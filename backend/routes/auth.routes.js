@@ -1,14 +1,21 @@
 import express from 'express';
-import { getMe, loginUser, registerUser, updateProfile } from '../controllers/auth.controller.js';
+import {
+  registerUser,
+  loginUser,
+  getMe,
+  updateProfile,
+} from '../controllers/auth.controller.js';
+import protect from '../middleware/auth.middleware.js';
+import { authLimiter } from '../middleware/rateLimiter.middleware.js';
 
+const router = express.Router();
 
- const router = express.Router();
+// ── Public Routes ─────────────────────────────
+router.post('/register', authLimiter, registerUser);
+router.post('/login', authLimiter, loginUser);
 
-router.post("/register", registerUser);
-router.post("/login",loginUser);
-router.get("/me",getMe);
-router.put("/update",updateProfile);
-
+// ── Protected Routes ──────────────────────────
+router.get('/me', protect, getMe);
+router.put('/update', protect, updateProfile);
 
 export default router;
-

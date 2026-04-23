@@ -1,16 +1,22 @@
-import express from 'express';
+
 import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
+import validatorRoutes from './routes/validator.routes.js';
 
 // Middleware
 import errorHandler from './middleware/errorHandler.middleware.js';
 
-dotenv.config();
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+
+
 
 // Connect to MongoDB
 connectDB();
@@ -22,6 +28,7 @@ app.use(express.json());
 // Routes
 
 app.use('/api/auth', authRoutes);
+app.use('/api/validate', validatorRoutes);
 
 // Health check
 app.get('/', (req, res) => {
