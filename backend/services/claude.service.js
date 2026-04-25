@@ -1,4 +1,4 @@
-import claude from '../config/claude.js';
+import getGeminiClient from '../config/claude.js';
 import { buildValidationPrompt } from '../utils/promptBuilder.js';
 import { parseValidationResponse } from '../utils/scoreParser.js';
 import { getTrendData } from './googleTrends.service.js';
@@ -6,13 +6,16 @@ import { getNewsByTopic } from './newsapi.service.js';
 
 const validateContentIdea = async (idea, platform, tone, format) => {
   try {
-    // Step 1 — Trend data fetch karo parallel mein
+    // Step 1 — Gemini client lo
+    const model = getGeminiClient();
+
+    // Step 2 — Trend + News parallel fetch karo
     const [trendsData, newsData] = await Promise.allSettled([
       getTrendData(idea),
       getNewsByTopic(idea),
     ]);
 
-    // Step 2 — Results extract karo
+    // Step 3 — Results extract karo
     const trends = trendsData.status === 'fulfilled'
       ? trendsData.value
       : null;
@@ -21,7 +24,7 @@ const validateContentIdea = async (idea, platform, tone, format) => {
       ? newsData.value.articles
       : [];
 
-    // Step 3 — Prompt build karo
+    // Step 4 — Prompt build karo
     const prompt = buildValidationPrompt(
       idea,
       platform,
@@ -31,33 +34,19 @@ const validateContentIdea = async (idea, platform, tone, format) => {
       news
     );
 
-    // Step 4 — Claude API call karo
-    const response = await claude.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1000,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-    });
+    // Step 5 — Gemini API call karo
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
 
-    // Step 5 — Response text nikalo
-    const responseText = response.content
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('');
-
-    // Step 6 — Parse karo aur validate karo
-    const result = parseValidationResponse(responseText);
+    // Step 6 — Parse karo
+    const parsed = parseValidationResponse(responseText);
 
     return {
       success: true,
-      data: result,
+      data: parsed,
     };
   } catch (error) {
-    console.error(`claude.service validateContentIdea Error: ${error.message}`);
+    console.error(`gemini.service Error: ${error.message}`);
     throw new Error(`Validation failed: ${error.message}`);
   }
 };
