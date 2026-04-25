@@ -7,7 +7,6 @@ def fetch_trends(keyword):
         pytrends = TrendReq(hl='en-US', tz=360)
         pytrends.build_payload([keyword], timeframe='now 7-d')
 
-        # Interest over time
         interest_df = pytrends.interest_over_time()
 
         if interest_df.empty:
@@ -19,16 +18,14 @@ def fetch_trends(keyword):
             }))
             return
 
-        # Latest value nikalo
         latest_value = int(interest_df[keyword].iloc[-1])
 
-        # Value 0 hai toh related queries se estimate karo
+        # ✅ Indentation fix
         if latest_value == 0:
-           related_interest = pytrends.interest_by_region()
-        if not related_interest.empty:
-           latest_value = int(related_interest[keyword].mean())
+            related_interest = pytrends.interest_by_region()
+            if not related_interest.empty:
+                latest_value = int(related_interest[keyword].mean())
 
-        # Direction calculate karo — upar ja raha hai ya neeche
         first_half = interest_df[keyword].iloc[:len(interest_df)//2].mean()
         second_half = interest_df[keyword].iloc[len(interest_df)//2:].mean()
 
@@ -39,7 +36,6 @@ def fetch_trends(keyword):
         else:
             direction = "stable"
 
-        # Related queries nikalo
         related = pytrends.related_queries()
         related_list = []
 
