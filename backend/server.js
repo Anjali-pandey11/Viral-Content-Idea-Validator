@@ -6,6 +6,10 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import validatorRoutes from './routes/validator.routes.js';
+import trendsRoutes from './routes/trends.routes.js';
+import historyRoutes from './routes/history.routes.js';
+
+
 
 // Middleware
 import errorHandler from './middleware/errorHandler.middleware.js';
@@ -29,6 +33,9 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/validate', validatorRoutes);
+app.use('/api/trends', trendsRoutes);
+app.use('/api/history', historyRoutes);
+
 
 // Health check
 app.get('/', (req, res) => {

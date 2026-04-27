@@ -10,7 +10,7 @@ const validateContentIdea = async (idea, platform, tone, format) => {
     const model = getGeminiClient();
 
     // Step 2 — Trend + News parallel fetch karo
-    const [trendsData, newsData] = await Promise.allSettled([
+    const [trendsData, newsData] = await Promise.allSettled([ 
       getTrendData(idea),
       getNewsByTopic(idea),
     ]);
